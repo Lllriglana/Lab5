@@ -141,6 +141,9 @@ public final class InputManager implements AutoCloseable {
         }
     }
 
+    /**
+     * Holds state for a script being executed from the stack.
+     */
     private static final class ScriptContext {
         private final Path path;
         private final BufferedReader reader;

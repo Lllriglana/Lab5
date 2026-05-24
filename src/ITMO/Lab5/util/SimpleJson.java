@@ -155,6 +155,9 @@ public final class SimpleJson {
         }
     }
 
+    /**
+     * Internal parser for minimal JSON structures.
+     */
     private static final class Parser {
         private final String text;
         private int index;
