@@ -20,7 +20,7 @@ public final class RemoveByIdCommand extends AbstractCommand {
 
     @Override
     public boolean execute(String argument) throws CommandException {
-        int id = parsePositiveInt(argument, "id");
+        long id = parsePositiveLong(argument, "id");
 
         boolean removed = collectionManager.removeById(id);
         if (removed) {

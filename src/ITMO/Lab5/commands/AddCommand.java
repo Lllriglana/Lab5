@@ -8,7 +8,7 @@ import ITMO.Lab5.managers.CollectionManager;
 import ITMO.Lab5.model.SpaceMarine;
 
 import java.io.PrintStream;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 /**
  * Adds a new element to the collection.
@@ -29,8 +29,8 @@ public final class AddCommand extends AbstractCommand {
     public boolean execute(String argument) throws CommandException {
         requireNoArgument(argument);
 
-        int id = collectionManager.generateNextId();
-        ZonedDateTime creationDate = ZonedDateTime.now();
+        Long id = collectionManager.generateNextId();
+        LocalDate creationDate = LocalDate.now();
 
         try {
             SpaceMarine marine = inputReader.readSpaceMarine(id, creationDate);

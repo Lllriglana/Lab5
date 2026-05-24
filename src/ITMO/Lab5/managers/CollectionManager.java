@@ -20,12 +20,12 @@ import java.util.Set;
 public final class CollectionManager {
     private final LinkedList<SpaceMarine> marines;
     private final ZonedDateTime initializationDate;
-    private int nextId;
+    private long nextId;
 
     public CollectionManager() {
         this.marines = new LinkedList<SpaceMarine>();
         this.initializationDate = ZonedDateTime.now();
-        this.nextId = 1;
+        this.nextId = 1L;
     }
 
     public synchronized void replaceAll(List<SpaceMarine> loadedMarines) throws ValidationException {
@@ -36,11 +36,11 @@ public final class CollectionManager {
         recalculateNextId();
     }
 
-    public synchronized int generateNextId() {
+    public synchronized Long generateNextId() {
         while (containsId(nextId)) {
             nextId++;
         }
-        int generated = nextId;
+        long generated = nextId;
         nextId++;
         return generated;
     }
@@ -65,7 +65,7 @@ public final class CollectionManager {
         return false;
     }
 
-    public synchronized boolean updateById(int id, SpaceMarine updatedMarine) {
+    public synchronized boolean updateById(long id, SpaceMarine updatedMarine) {
         for (int i = 0; i < marines.size(); i++) {
             if (marines.get(i).getId() == id) {
                 marines.set(i, updatedMarine);
@@ -76,7 +76,7 @@ public final class CollectionManager {
         return false;
     }
 
-    public synchronized SpaceMarine findById(int id) {
+    public synchronized SpaceMarine findById(long id) {
         for (SpaceMarine marine : marines) {
             if (marine.getId() == id) {
                 return marine;
@@ -85,7 +85,7 @@ public final class CollectionManager {
         return null;
     }
 
-    public synchronized boolean removeById(int id) {
+    public synchronized boolean removeById(long id) {
         return marines.removeIf(marine -> marine.getId() == id);
     }
 
@@ -147,7 +147,7 @@ public final class CollectionManager {
     }
 
     private void recalculateNextId() {
-        int maxId = 0;
+        long maxId = 0L;
         for (SpaceMarine marine : marines) {
             if (marine.getId() > maxId) {
                 maxId = marine.getId();
@@ -156,7 +156,7 @@ public final class CollectionManager {
         nextId = maxId + 1;
     }
 
-    private boolean containsId(int id) {
+    private boolean containsId(long id) {
         for (SpaceMarine marine : marines) {
             if (marine.getId() == id) {
                 return true;
@@ -166,7 +166,7 @@ public final class CollectionManager {
     }
 
     private void ensureUniqueIds(List<SpaceMarine> marinesToCheck) throws ValidationException {
-        Set<Integer> ids = new HashSet<Integer>();
+        Set<Long> ids = new HashSet<Long>();
         for (SpaceMarine marine : marinesToCheck) {
             if (!ids.add(marine.getId())) {
                 throw new ValidationException("Duplicate id in loaded data: " + marine.getId());

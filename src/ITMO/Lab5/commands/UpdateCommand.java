@@ -26,7 +26,7 @@ public final class UpdateCommand extends AbstractCommand {
 
     @Override
     public boolean execute(String argument) throws CommandException {
-        int id = parsePositiveInt(argument, "id");
+        long id = parsePositiveLong(argument, "id");
 
         SpaceMarine existing = collectionManager.findById(id);
         if (existing == null) {

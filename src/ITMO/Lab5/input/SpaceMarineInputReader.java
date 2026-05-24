@@ -12,7 +12,7 @@ import ITMO.Lab5.util.EnumUtils;
 import ITMO.Lab5.util.Validators;
 
 import java.io.PrintStream;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 /**
  * Reads and validates composite SpaceMarine input from current input source.
@@ -26,13 +26,13 @@ public final class SpaceMarineInputReader {
         this.out = out;
     }
 
-    public SpaceMarine readSpaceMarine(Integer id, ZonedDateTime creationDate) throws InputException, ValidationException {
+    public SpaceMarine readSpaceMarine(Long id, LocalDate creationDate) throws InputException, ValidationException {
         String name = readRequiredString("name (required)", "name");
 
-        long x = readLongWithMax("coordinates.x (long, <= 358)", 358, "coordinates.x");
-        Float y = readFloatRequired("coordinates.y (float, required)", "coordinates.y");
+        float x = readFloatWithMax("coordinates.x (float, <= 358)", 358.0f, "coordinates.x");
+        Integer y = readIntegerRequired("coordinates.y (int, required)", "coordinates.y");
 
-        int health = readPositiveInt("health (int, > 0)", "health");
+        double health = readPositiveDouble("health (double, > 0)", "health");
 
         String categoryPrompt = "category (" + EnumUtils.allowedValues(AstartesCategory.class) + ", required)";
         AstartesCategory category = readEnum(categoryPrompt, AstartesCategory.class, false);
@@ -79,39 +79,39 @@ public final class SpaceMarineInputReader {
         });
     }
 
-    private long readLongWithMax(String prompt, long max, String fieldName) throws InputException {
+    private float readFloatWithMax(String prompt, float max, String fieldName) throws InputException {
         return readUntilValid(prompt, raw -> {
             String trimmed = normalizeRequiredNumeric(raw, fieldName);
-            long value;
+            float value;
             try {
-                value = Long.parseLong(trimmed);
+                value = Float.parseFloat(trimmed);
             } catch (NumberFormatException e) {
-                throw new ValidationException(fieldName + " must be a long number");
+                throw new ValidationException(fieldName + " must be a float number");
             }
             Validators.requireLessOrEqual(value, max, fieldName);
             return value;
         });
     }
 
-    private Float readFloatRequired(String prompt, String fieldName) throws InputException {
+    private Integer readIntegerRequired(String prompt, String fieldName) throws InputException {
         return readUntilValid(prompt, raw -> {
             String trimmed = normalizeRequiredNumeric(raw, fieldName);
             try {
-                return Float.parseFloat(trimmed);
+                return Integer.parseInt(trimmed);
             } catch (NumberFormatException e) {
-                throw new ValidationException(fieldName + " must be a float number");
+                throw new ValidationException(fieldName + " must be an integer number");
             }
         });
     }
 
-    private int readPositiveInt(String prompt, String fieldName) throws InputException {
+    private double readPositiveDouble(String prompt, String fieldName) throws InputException {
         return readUntilValid(prompt, raw -> {
             String trimmed = normalizeRequiredNumeric(raw, fieldName);
-            int value;
+            double value;
             try {
-                value = Integer.parseInt(trimmed);
+                value = Double.parseDouble(trimmed);
             } catch (NumberFormatException e) {
-                throw new ValidationException(fieldName + " must be an integer number");
+                throw new ValidationException(fieldName + " must be a double number");
             }
             Validators.requireGreaterThanZero(value, fieldName);
             return value;

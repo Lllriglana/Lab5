@@ -18,7 +18,7 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -74,7 +74,7 @@ public final class FileManager {
 
         List<?> rawList = (List<?>) root;
         List<SpaceMarine> loaded = new ArrayList<SpaceMarine>();
-        Set<Integer> seenIds = new HashSet<Integer>();
+        Set<Long> seenIds = new HashSet<Long>();
         int skipped = 0;
 
         for (int i = 0; i < rawList.size(); i++) {
@@ -143,20 +143,20 @@ public final class FileManager {
     private SpaceMarine parseSpaceMarine(Object rawObject) throws ValidationException {
         Map<String, Object> map = asObjectMap(rawObject, "record");
 
-        Integer id = readRequiredInteger(map.get("id"), "id");
+        Long id = readRequiredLong(map.get("id"), "id");
         String name = readRequiredString(map.get("name"), "name");
 
         Coordinates coordinates = parseCoordinates(map.get("coordinates"));
 
         String creationDateText = readRequiredString(map.get("creationDate"), "creationDate");
-        ZonedDateTime creationDate;
+        LocalDate creationDate;
         try {
-            creationDate = ZonedDateTime.parse(creationDateText);
+            creationDate = LocalDate.parse(creationDateText);
         } catch (DateTimeParseException e) {
             throw new ValidationException("Invalid creationDate format");
         }
 
-        int health = readRequiredInteger(map.get("health"), "health");
+        double health = readRequiredDouble(map.get("health"), "health");
 
         AstartesCategory category = parseEnum(map.get("category"), AstartesCategory.class, "category", false);
         Weapon weaponType = parseEnum(map.get("weaponType"), Weapon.class, "weaponType", true);
@@ -179,8 +179,8 @@ public final class FileManager {
 
     private Coordinates parseCoordinates(Object rawObject) throws ValidationException {
         Map<String, Object> map = asObjectMap(rawObject, "coordinates");
-        long x = readRequiredLong(map.get("x"), "coordinates.x");
-        Float y = readRequiredFloat(map.get("y"), "coordinates.y");
+        float x = readRequiredFloat(map.get("x"), "coordinates.x");
+        Integer y = readRequiredInteger(map.get("y"), "coordinates.y");
         return new Coordinates(x, y);
     }
 
@@ -226,7 +226,7 @@ public final class FileManager {
         return (int) value;
     }
 
-    private long readRequiredLong(Object rawValue, String fieldName) throws ValidationException {
+    private Long readRequiredLong(Object rawValue, String fieldName) throws ValidationException {
         Number number = readRequiredNumber(rawValue, fieldName);
         double value = number.doubleValue();
         if (Double.isNaN(value) || Double.isInfinite(value)) {
@@ -241,10 +241,19 @@ public final class FileManager {
         return (long) value;
     }
 
-    private Float readRequiredFloat(Object rawValue, String fieldName) throws ValidationException {
+    private float readRequiredFloat(Object rawValue, String fieldName) throws ValidationException {
         Number number = readRequiredNumber(rawValue, fieldName);
         float value = number.floatValue();
         if (Float.isNaN(value) || Float.isInfinite(value)) {
+            throw new ValidationException(fieldName + " must be a finite number");
+        }
+        return value;
+    }
+
+    private double readRequiredDouble(Object rawValue, String fieldName) throws ValidationException {
+        Number number = readRequiredNumber(rawValue, fieldName);
+        double value = number.doubleValue();
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
             throw new ValidationException(fieldName + " must be a finite number");
         }
         return value;

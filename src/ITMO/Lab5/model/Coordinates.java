@@ -9,19 +9,19 @@ import java.util.Objects;
  * Coordinates of a space marine.
  */
 public final class Coordinates {
-    private final long x;
-    private final Float y;
+    private final float x;
+    private final Integer y;
 
-    public Coordinates(long x, Float y) throws ValidationException {
-        this.x = Validators.requireLessOrEqual(x, 358, "coordinates.x");
+    public Coordinates(float x, Integer y) throws ValidationException {
+        this.x = Validators.requireLessOrEqual(x, 358.0f, "coordinates.x");
         this.y = Validators.requireNotNull(y, "coordinates.y");
     }
 
-    public long getX() {
+    public float getX() {
         return x;
     }
 
-    public Float getY() {
+    public Integer getY() {
         return y;
     }
 
@@ -42,7 +42,7 @@ public final class Coordinates {
             return false;
         }
         Coordinates that = (Coordinates) o;
-        return x == that.x && Objects.equals(y, that.y);
+        return Float.compare(that.x, x) == 0 && Objects.equals(y, that.y);
     }
 
     @Override

@@ -9,7 +9,7 @@ public final class Validators {
     private Validators() {
     }
 
-    public static Integer requireValidId(Integer id) throws ValidationException {
+    public static Long requireValidId(Long id) throws ValidationException {
         if (id == null) {
             throw new ValidationException("id must not be null");
         }
@@ -43,7 +43,21 @@ public final class Validators {
         return value;
     }
 
+    public static double requireGreaterThanZero(double value, String fieldName) throws ValidationException {
+        if (value <= 0) {
+            throw new ValidationException(fieldName + " must be greater than 0");
+        }
+        return value;
+    }
+
     public static long requireLessOrEqual(long value, long max, String fieldName) throws ValidationException {
+        if (value > max) {
+            throw new ValidationException(fieldName + " must be less than or equal to " + max);
+        }
+        return value;
+    }
+
+    public static float requireLessOrEqual(float value, float max, String fieldName) throws ValidationException {
         if (value > max) {
             throw new ValidationException(fieldName + " must be less than or equal to " + max);
         }

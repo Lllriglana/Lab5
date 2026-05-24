@@ -3,29 +3,29 @@ package ITMO.Lab5.model;
 import ITMO.Lab5.exceptions.ValidationException;
 import ITMO.Lab5.util.Validators;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
  * Domain object managed by the collection.
  */
 public final class SpaceMarine implements Comparable<SpaceMarine> {
-    private final Integer id;
+    private final Long id;
     private final String name;
     private final Coordinates coordinates;
-    private final ZonedDateTime creationDate;
-    private final int health;
+    private final LocalDate creationDate;
+    private final double health;
     private final AstartesCategory category;
     private final Weapon weaponType;
     private final MeleeWeapon meleeWeapon;
     private final Chapter chapter;
 
     public SpaceMarine(
-            Integer id,
+            Long id,
             String name,
             Coordinates coordinates,
-            ZonedDateTime creationDate,
-            int health,
+            LocalDate creationDate,
+            double health,
             AstartesCategory category,
             Weapon weaponType,
             MeleeWeapon meleeWeapon,
@@ -42,7 +42,7 @@ public final class SpaceMarine implements Comparable<SpaceMarine> {
         this.chapter = Validators.requireNotNull(chapter, "chapter");
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -54,11 +54,11 @@ public final class SpaceMarine implements Comparable<SpaceMarine> {
         return coordinates;
     }
 
-    public ZonedDateTime getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public int getHealth() {
+    public double getHealth() {
         return health;
     }
 
@@ -80,11 +80,11 @@ public final class SpaceMarine implements Comparable<SpaceMarine> {
 
     @Override
     public int compareTo(SpaceMarine other) {
-        int byHealth = Integer.compare(this.health, other.health);
+        int byHealth = Double.compare(this.health, other.health);
         if (byHealth != 0) {
             return byHealth;
         }
-        return Integer.compare(this.id, other.id);
+        return Long.compare(this.id, other.id);
     }
 
     @Override
@@ -111,8 +111,8 @@ public final class SpaceMarine implements Comparable<SpaceMarine> {
             return false;
         }
         SpaceMarine that = (SpaceMarine) o;
-        return health == that.health
-                && Objects.equals(id, that.id)
+        return Double.compare(that.health, health) == 0
+            && Objects.equals(id, that.id)
                 && Objects.equals(name, that.name)
                 && Objects.equals(coordinates, that.coordinates)
                 && Objects.equals(creationDate, that.creationDate)

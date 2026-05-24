@@ -50,4 +50,18 @@ public abstract class AbstractCommand implements Command {
         }
         return parsed;
     }
+
+    protected long parsePositiveLong(String argument, String fieldName) throws CommandException {
+        String value = requireArgument(argument);
+        final long parsed;
+        try {
+            parsed = Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            throw new CommandException(fieldName + " must be a long number");
+        }
+        if (parsed <= 0) {
+            throw new CommandException(fieldName + " must be greater than 0");
+        }
+        return parsed;
+    }
 }
