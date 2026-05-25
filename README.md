@@ -1,18 +1,84 @@
-## Getting Started
+# Lab 5 Collection Manager
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Console application for managing a collection of SpaceMarine objects in interactive mode. Data is loaded from a JSON file at startup and can be saved back with the `save` command.
 
-## Folder Structure
+## Requirements
 
-The workspace contains two folders by default, where:
+- JDK 17+ (or any JDK compatible with your local setup).
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Build
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+```bash
+javac -d bin $(find src -name '*.java')
+```
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## Run
 
-## Dependency Management
+```bash
+java -cp bin ITMO.Lab5.Main lab5_data.json
+```
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+`lab5_data.json` is the data file path. You can use a relative path or an absolute path.
+
+## Commands
+
+- `help` - print command list
+- `info` - print collection info
+- `show` - list all elements
+- `add` - add a new element (interactive input)
+- `update <id>` - update element by id
+- `remove_by_id <id>` - remove element by id
+- `clear` - clear the collection
+- `save` - save to the startup file path
+- `execute_script <file>` - execute commands from a script file
+- `exit` - terminate without saving
+- `add_if_min` - add element if it is less than current minimum
+- `shuffle` - shuffle elements randomly
+- `history` - print last 11 commands
+- `count_less_than_weapon_type <weaponType>` - count elements with weaponType less than provided
+- `filter_by_weapon_type <weaponType>` - list elements with the given weaponType
+- `print_unique_category` - print unique category values
+
+## Interactive Input Rules
+
+- `id` and `creationDate` are generated automatically and are not entered by the user.
+- Enum fields accept one of the allowed constants (case-insensitive).
+- Empty line is treated as `null` for nullable fields.
+- On invalid input, the field is requested again.
+
+## JSON Format
+
+Root is an array of objects. Example:
+
+```json
+[
+	{
+		"id": 1,
+		"name": "Alpha",
+		"coordinates": {"x": 10.5, "y": 20},
+		"creationDate": "2026-05-24",
+		"health": 100.5,
+		"category": "SCOUT",
+		"weaponType": "MELTAGUN",
+		"meleeWeapon": "POWER_FIST",
+		"chapter": {"name": "Ultramar", "world": "Macragge"}
+	}
+]
+```
+
+## Javadoc
+
+Generate documentation into [docs/](docs/):
+
+```bash
+javadoc -d docs $(find src -name '*.java')
+```
+
+Open [docs/index.html](docs/index.html) in a browser (Linux: `xdg-open docs/index.html`).
+
+## Project Structure
+
+- [src/](src/) - sources
+- [bin/](bin/) - compiled classes
+- [docs/](docs/) - Javadoc output
+- [lab5_data.json](lab5_data.json) - default data file
